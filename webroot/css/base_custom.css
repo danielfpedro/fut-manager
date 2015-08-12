@@ -1,0 +1,13 @@
+html, body{
+	height: 100%;
+}
+.side-col{
+	height: 100%;
+	width: 20%;
+	float: left;
+}
+.main-col{
+	height: 100%;
+	width: 80%;
+	float: right;
+}
