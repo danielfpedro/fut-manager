@@ -9,7 +9,8 @@
         "cakephp/cakephp": "~3.0",
         "mobiledetect/mobiledetectlib": "2.*",
         "cakephp/migrations": "~1.0",
-        "cakephp/plugin-installer": "*"
+        "cakephp/plugin-installer": "*",
+        "danielfpedro/dice": "dev-master"
     },
     "require-dev": {
         "psy/psysh": "@stable",
@@ -20,6 +21,12 @@
         "phpunit/phpunit": "Allows automated tests to be run without system-wide install.",
         "cakephp/cakephp-codesniffer": "Allows to check the code against the coding standards used in CakePHP."
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/danielfpedro/dice"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "App\\": "src"

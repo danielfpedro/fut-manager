@@ -26,8 +26,6 @@ use Cake\Controller\Controller;
  */
 class AppController extends Controller
 {
-    public $layout = 'custom';
-
     /**
      * Initialization hook method.
      *
@@ -39,5 +37,7 @@ class AppController extends Controller
     {
         parent::initialize();
         $this->loadComponent('Flash');
+
+        $this->viewBuilder()->layout('custom');
     }
 }

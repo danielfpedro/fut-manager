@@ -30,4 +30,29 @@ class GameController extends AppController
     public function dashboard()
     {
     }
+    public function game()
+    {
+    	$this->loadComponent('Plays');
+
+    	$kicker = (object)[
+    		'shootStrength' => 10
+    	];
+    	$goalKeeper = (object)[
+    		'saveSkill' => 6
+    	];
+    	$results['defesas'] = 0;
+    	$results['gols'] = 0;
+
+    	$times = 100;
+
+    	for ($i=0; $i < $times; $i++) { 
+    		if ($this->Plays->shoot($kicker, $goalKeeper, 'c1', 'strong') == 'Gol') {
+    			$results['gols']++;
+    		} else {
+    			$results['defesas']++;
+    		}
+    	}
+    	debug($results);
+    	
+    }
 }
