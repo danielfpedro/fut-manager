@@ -32,26 +32,63 @@ class PlaysComponent extends Component
 		[6, 4, 2, 4, 6]
 	];
 
+	/**
+	 * Qualidade do movimento
+	 */
+	protected function $_getMoveQuality($value)
+	{
+		$out = '';
+		if ($value <= 2) {
+			$out = 'Péssimo';
+		} elseif ($value <= 5) {
+			$out = 'Ruim';
+		} elseif ($value <= 7) {
+			$out = 'Normal';
+		} elseif ($value <= 9) {
+			$out = 'Bom';
+		} elseif ($value == 10) {
+			$out = 'Incrível';
+		}
+		return $out;
+	}
+
 	public function shoot($kicker, $goalKeeper, $zone, $shootStyle)
 	{
+		$out = [];
+		$out['zone'] = $zone;
+		$out['atkSkill'] = $kicker->shootStrength;
+		$out['defSkill'] = $goalKeeper->saveSkill;
+
 		$distanceDifficultIndex = $this->_getValueByZone($zone);
 		$distanceValue = $this->shootDistanceDifficulties[$shootStyle][$distanceDifficultIndex[1]][$distanceDifficultIndex[0]];
 
-		$shootDistanceFactor = 3;
+		$out['distanceDifficult'] = $distanceValue;
+
+		$shootDistanceFactor = 4;
+		$out['distanceFactor'] = '+' . $shootDistanceFactor;
 
 		$kickerDice = new Dice($kicker->shootStrength);
-		$kickerResult = $kickerDice->roll();
-		$kickerResult = ($kickerResult + $shootDistanceFactor) - $distanceValue;
+
+		$kickerDiceResult = $kickerDice->roll();
+		$out['atkDiceResult'] = $kickerDiceResult;
+
+		$kickerResult = ($kickerDiceResult + $shootDistanceFactor) - $distanceValue;
 		$kickerResult = ($kickerResult < 1) ? 0 : $kickerResult;
+
+		$out['atkResult'] = $kickerResult;
 
 		$gkDice = new Dice($goalKeeper->saveSkill);
 		$gkResult = $gkDice->roll();
+		$out['gkDiceResult'] = $gkResult;
 
-		if ($gkResult >= $kickerResult) {
-			return 'Defendeu';
+		if ($gkResult > $kickerResult) {
+			$out['result'] = 'Defendeu';
+		} elseif ($gkResult == $kickerResult) {
+			$out['result'] = 'Rebateu';
 		} else {
-			return 'Gol';
+			$out['result'] = 'Gol';
 		}
+		return $out;
 	}
 
 	protected function _getShootDistanceDifficult($kicker, $zone, $shootStyle)

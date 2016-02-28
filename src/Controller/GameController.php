@@ -18,6 +18,10 @@ use Cake\Core\Configure;
 use Cake\Network\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
 
+use FutEngine\Game;
+use FutEngine\Shot;
+use FutEngine\Commentary;
+
 /**
  * Static content controller
  *
@@ -32,27 +36,87 @@ class GameController extends AppController
     }
     public function game()
     {
-    	$this->loadComponent('Plays');
-
+        $teamA = (object)[
+            'name' => 'Real Madrid',
+            'players' => (object)[
+                (object)[
+                    'pos' => 'gk',
+                    'name' => 'Keylor Navas',
+                    'shortName' => 'Navas',
+                    'skills' => (object)[
+                        'gk' => 9
+                    ]
+                ],
+                (object)[
+                    'pos' => 'str',
+                    'name' => 'Cristiano Ronaldo',
+                    'shortName' => 'Ronaldo',
+                    'skills' => (object)[
+                        'shotAcc' => 7
+                    ]
+                ]
+            ]
+        ];
+        $teamB = (object)[
+            'name' => 'Barcelona',
+            'players' => (object)[
+                (object)[
+                    'pos' => 'gk',
+                    'name' => 'Ter Stegen',
+                    'skills' => (object)[
+                        'gk' => 9
+                    ]
+                ],
+                (object)[
+                    'pos' => 'str',
+                    'name' => 'Lionel Messi',
+                    'shortName' => 'Messi',
+                    'skills' => (object)[
+                        'shotAcc' => 9
+                    ]
+                ]
+            ]
+        ];
     	$kicker = (object)[
-    		'shootStrength' => 10
+    		'shootStrength' => 9
     	];
     	$goalKeeper = (object)[
-    		'saveSkill' => 6
+    		'saveSkill' => 9
     	];
     	$results['defesas'] = 0;
     	$results['gols'] = 0;
 
-    	$times = 100;
+        $game = [];
+        $game['teamA'] = $teamA;
+        $game['teamB'] = $teamB;
 
-    	for ($i=0; $i < $times; $i++) { 
-    		if ($this->Plays->shoot($kicker, $goalKeeper, 'c1', 'strong') == 'Gol') {
-    			$results['gols']++;
-    		} else {
-    			$results['defesas']++;
-    		}
-    	}
-    	debug($results);
+    	$game = new Game($game);
+        $shot = new Shot($game);
+        $commentary = new Commentary;
+
+        $atk = $game->getPlayerByPos('a', 'str');
+        $gk = $game->getPlayerByPos('b','gk');
+
+    	$times = 1;
+
+        for ($i=0; $i < $times; $i++) { 
+            $shotResult = $shot->doFinesse($game->getTeam('a'), $game->getTeam('a'), $atk, $gk, 'c1');
+            //debug($shotResult);
+            echo $commentary->shot($shotResult);
+            echo '<br>';
+            echo '<br>';
+        }
+
+    	// for ($i=0; $i < $times; $i++) { 
+    	// 	if ($this->Plays->shoot($kicker, $goalKeeper, 'a4', 'placed')['result'] == 'Gol') {
+    	// 		$results['gols']++;
+    	// 	} else {
+    	// 		$results['defesas']++;
+    	// 	}
+    	// }
+    	// $percent = ($results['gols']);
+    	// debug(($results['gols'] / 10) . '%');
+    	// debug($results);
     	
     }
 }
