@@ -92,7 +92,7 @@ class GameController extends AppController
 
     	$game = new Game($game);
         $shot = new Shot($game);
-        $commentary = new Commentary;
+        $commentary = new Commentary($game);
 
         $atk = $game->getPlayerByPos('a', 'str');
         $gk = $game->getPlayerByPos('b','gk');
@@ -100,7 +100,7 @@ class GameController extends AppController
     	$times = 1;
 
         for ($i=0; $i < $times; $i++) { 
-            $shotResult = $shot->doFinesse($game->getTeam('a'), $game->getTeam('a'), $atk, $gk, 'c1');
+            $shotResult = $shot->doFinesse($game->getTeam('a'), $game->getTeam('a'), $atk, $gk, 'c2');
             //debug($shotResult);
             echo $commentary->shot($shotResult);
             echo '<br>';
